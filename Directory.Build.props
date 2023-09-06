@@ -34,6 +34,15 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+    <TargetPlatformMinVersion>10.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0.15138.0'">
+    <TargetPlatformMinVersion>10.0.15138.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'
+                         or '$(TargetFramework)' == 'uap10.0.15138.0'">
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <DefaultLanguage>en-US</DefaultLanguage>
     <DefineConstants>$(DefineConstants);WINDOWS_UWP</DefineConstants>
@@ -42,7 +51,6 @@
     <TargetFrameworkIdentifier>.NETCore</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformMinVersion>10.0</TargetPlatformMinVersion>
     <TargetPlatformVersion>10.0.22621.0</TargetPlatformVersion>
   </PropertyGroup>
 

@@ -12,7 +12,8 @@ It's a WinRT package of [AdvancedSharpAdbClient](https://github.com/yungd1plomat
 
 ## Support Platform
 - UAP 10.0
-- .NET 6.0 - Windows 10.0.18362.0
+- UAP 10.0.15138.0
+- .NET 6.0 - Windows 10.0.17763.0
 
 ## Installation
 To install AdvancedSharpAdbClient.WinRT install the [AdvancedSharpAdbClient.WinRT NuGetPackage](https://www.nuget.org/packages/AdvancedSharpAdbClient.WinRT).

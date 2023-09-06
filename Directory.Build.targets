@@ -6,7 +6,8 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0'
+                     or '$(TargetFramework)' == 'uap10.0.15138.0'">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" PrivateAssets="all" IsImplicitlyDefined="true" />
   </ItemGroup>
 

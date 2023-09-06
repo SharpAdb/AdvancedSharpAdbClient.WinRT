@@ -1,6 +1,11 @@
 <!-- This file was produced from C#/WinRT -->
 <Project ToolsVersion="14.0" xmln="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <IsUseNetCore463 Condition="'$(IsUseNetCore463)' == '' AND '$(UWPCoreRuntimeSdkVersion)' != '' AND $([MSBuild]::VersionGreaterThanOrEquals($(UWPCoreRuntimeSdkVersion), '2'))">true</IsUseNetCore463>
+    <_TargetFramework Condition="'$(IsUseNetCore463)' != 'true'">uap10.0</_TargetFramework>
+    <_TargetFramework Condition="'$(IsUseNetCore463)' == 'true'">uap10.0.15138</_TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
     <!-- Add the hosting dlls to references so they get binplaced -->
     <ResolveReferencesDependsOn>AdvancedSharpAdbClient_WinRTCopyAuthoringDlls;$(ResolveReferencesDependsOn)</ResolveReferencesDependsOn>
     <!-- Add authored component's winmd to references before C++/WinRT runs -->
@@ -8,19 +13,19 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Managed, WinRT and SDK.NET dlls -->
-    <HostingAssets Include="$(MSBuildThisFileDirectory)..\lib\uap10.0\*.dll" />
+    <HostingAssets Include="$(MSBuildThisFileDirectory)..\lib\$(_TargetFramework)\*.dll" />
     <!-- Managed DLLs from packages the component depends on -->
-    <HostingAssets Include="$(MSBuildThisFileDirectory)..\build\uap10.0\*.dll" />
+    <HostingAssets Include="$(MSBuildThisFileDirectory)..\build\$(_TargetFramework)\*.dll" />
   </ItemGroup>
   <!-- Add the WinMD file as a reference of the native app so a projection gets made -->
   <Target Name="AdvancedSharpAdbClient_WinRTAddAuthoredWinMDReference" Outputs="@(Reference)">
     <ItemGroup Condition="'$(TargetFramework)' == 'native' OR '$(TargetFramework)' == ''">
-      <Reference Include="$(MSBuildThisFileDirectory)..\lib\uap10.0\*.winmd">
+      <Reference Include="$(MSBuildThisFileDirectory)..\lib\$(_TargetFramework)\*.winmd">
         <IsWinMDFile>true</IsWinMDFile>
       </Reference>
     </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' != 'native' AND '$(TargetFramework)' != ''">
-      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\lib\uap10.0\*.winmd" />
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\lib\$(_TargetFramework)\*.winmd" />
     </ItemGroup>
   </Target>
   <!-- Make sure the runtime assets are available to the app -->
