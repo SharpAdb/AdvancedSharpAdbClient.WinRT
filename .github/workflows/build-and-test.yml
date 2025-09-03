@@ -3,10 +3,10 @@ name: build and test
 on:
   push:
     branches:
-      - winrt
+      - main
   pull_request:
     branches:
-      - winrt
+      - main
   workflow_dispatch:
 
 env:
@@ -17,7 +17,6 @@ jobs:
     name: build-and-pack
     runs-on: windows-latest
     env:
-      Nuget_Source: https://nuget.pkg.github.com/SharpAdb/index.json
       Solution_Name: AdvancedSharpAdbClient.WinRT/AdvancedSharpAdbClient.WinRT.csproj
 
     steps:
@@ -47,7 +46,10 @@ jobs:
   
     - name: Publish
       if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
-      run: dotnet nuget push nugets/**.nupkg --source "$env:Nuget_Source" --skip-duplicate --api-key ${{ secrets.NUGET_KEY }}
+      run: dotnet nuget push nugets/**.nupkg --source $env:NUGET_SOURCE --skip-duplicate --api-key $env:GITHUB_TOKEN
+      env:
+        NUGET_SOURCE: https://nuget.pkg.github.com/SharpAdb/index.json
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload
       uses: actions/upload-artifact@v4
