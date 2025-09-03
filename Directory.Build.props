@@ -28,7 +28,7 @@
   <PropertyGroup>
     <FullTargets Condition="'$(FullTargets)' == ''">False</FullTargets>
     <IsWindows Condition="'$(IsWindows)' == ''">False</IsWindows>
-    <CsWinRTVersion Condition="'$(CsWinRTVersion)' == ''">2.0.3</CsWinRTVersion>
+    <CsWinRTVersion Condition="'$(CsWinRTVersion)' == ''">2.2.0</CsWinRTVersion>
     <IsWindows Condition="$([MSBuild]::IsOSPlatform('Windows')) == 'True' OR '$(Platform)' == 'Windows NT'">True</IsWindows>
     <IsTestProject Condition="'$(IsTestProject)' == ''">$(MSBuildProjectName.Contains('.Test'))</IsTestProject>
   </PropertyGroup>

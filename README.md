@@ -1,6 +1,6 @@
 | Issues | License | NuGet |
 |--------|---------|-------|
-[![Github Issues](https://img.shields.io/github/issues/yungd1plomat/AdvancedSharpAdbClient)](https://github.com/yungd1plomat/AdvancedSharpAdbClient/issues)|[![Github Issues](https://img.shields.io/github/license/yungd1plomat/AdvancedSharpAdbClient)](https://github.com/yungd1plomat/AdvancedSharpAdbClient/blob/main/LICENSE)|[![NuGet Status](https://img.shields.io/nuget/dt/AdvancedSharpAdbClient.WinRT.svg?style=flat)](https://www.nuget.org/packages/AdvancedSharpAdbClient.WinRT/)
+[![Github Issues](https://img.shields.io/github/issues/SharpAdb/AdvancedSharpAdbClient.WinRT)](https://github.com/SharpAdb/AdvancedSharpAdbClient.WinRT/issues)|[![Github Issues](https://img.shields.io/github/license/SharpAdb/AdvancedSharpAdbClient.WinRT)](https://github.com/SharpAdb/AdvancedSharpAdbClient.WinRT/blob/main/LICENSE)|[![NuGet Status](https://img.shields.io/nuget/dt/AdvancedSharpAdbClient.WinRT.svg?style=flat)](https://www.nuget.org/packages/AdvancedSharpAdbClient.WinRT/)
 
 # A WinRT client for adb, the Android Debug Bridge (AdvancedSharpAdbClient.WinRT)
 
@@ -8,12 +8,12 @@ AdvancedSharpAdbClient.WinRT is a WinRT library that allows WinRT applications t
 It provides a WinRT implementation of the `adb` protocol, giving more flexibility to the developer than launching an 
 `adb.exe` process and parsing the console output.
 
-It's a WinRT package of [AdvancedSharpAdbClient](https://github.com/yungd1plomat/AdvancedSharpAdbClient), which is upgraded version of [SharpAdbClient](https://github.com/quamotion/madb).
+It's a WinRT package of [AdvancedSharpAdbClient](https://github.com/SharpAdb/AdvancedSharpAdbClient.WinRT), which is upgraded version of [SharpAdbClient](https://github.com/quamotion/madb).
 
 ## Support Platform
 - UAP 10.0
 - UAP 10.0.15138.0
-- .NET 6.0 - Windows 10.0.17763.0
+- .NET 8.0 - Windows 10.0.17763.0
 
 ## Installation
 To install AdvancedSharpAdbClient.WinRT install the [AdvancedSharpAdbClient.WinRT NuGetPackage](https://www.nuget.org/packages/AdvancedSharpAdbClient.WinRT).
@@ -427,7 +427,7 @@ AdbClient::SetEncoding(0);
 ```
 
 ## Contributors
-[![Contributors](https://contrib.rocks/image?repo=yungd1plomat/AdvancedSharpAdbClient)](https://github.com/yungd1plomat/AdvancedSharpAdbClient/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=SharpAdb/AdvancedSharpAdbClient.WinRT)](https://github.com/SharpAdb/AdvancedSharpAdbClient.WinRT/graphs/contributors)
 
 ## Consulting and Support
 Please open an **issue** on if you have suggestions or problems.

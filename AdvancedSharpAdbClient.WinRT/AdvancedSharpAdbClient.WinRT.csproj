@@ -2,100 +2,102 @@
 
   <PropertyGroup>
     <FullTargets>True</FullTargets>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">True</IsAotCompatible>
+    <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">True</IsTrimmable>
+    <TargetFrameworks>uap10.0;uap10.0.15138.0</TargetFrameworks>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);AddWinMDToPackage</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(FullTargets)' == 'true'">
-    <NoWarn>NU1603;NU5100</NoWarn>
-    <OutputPathRoot Condition="'$(Platform)' == 'AnyCPU'">bin\$(Configuration)\</OutputPathRoot>
-    <OutputPathRoot Condition="'$(Platform)' != 'AnyCPU'">bin\$(Platform)\$(Configuration)\</OutputPathRoot>
-    <TargetFrameworks>uap10.0;uap10.0.15138.0;net6.0-windows10.0.17763.0</TargetFrameworks>
+    <NoWarn>$(NoWarn);NU5100</NoWarn>
+    <TargetFrameworks>$(TargetFrameworks);net8.0-windows10.0.17763.0</TargetFrameworks>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(FullTargets)' != 'true'">
-    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' != 'net6.0-windows10.0.17763.0'">
+  <PropertyGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net5.0-windows10.0.17763.0'))">
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <DebugType>Full</DebugType>
-    <NoWarn>CS0419</NoWarn>
     <OutputType>winmdobj</OutputType>
-    <Platforms>AnyCPU;x64;x86;ARM64;ARM</Platforms>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0-windows10.0.17763.0'">
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net5.0-windows10.0.17763.0'))">
     <CsWinRTComponent>true</CsWinRTComponent>
     <CsWinRTWindowsMetadata>10.0.22621.0</CsWinRTWindowsMetadata>
-    <NoWarn>CS0618;CS1591</NoWarn>
-    <Platforms>x64;x86;ARM64;ARM</Platforms>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="AdvancedSharpAdbClient" Version="2.5.7" />
+    <PackageReference Include="AdvancedSharpAdbClient" Version="2.5.7" />
   </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="$(CsWinRTVersion)" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <Target Name="AddWinMDToPackage">
+    <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+      <TfmSpecificPackageFile Include="$(OutputPath)\AdvancedSharpAdbClient.dll" Condition="Exists('$(OutputPath)\AdvancedSharpAdbClient.dll')">
+        <PackagePath>build\$(TargetFramework)</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(OutputPath)\Microsoft.Extensions.Logging.Abstractions.dll" Condition="Exists('$(OutputPath)\Microsoft.Extensions.Logging.Abstractions.dll')">
+        <PackagePath>build\$(TargetFramework)</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(OutputPath)\System.Runtime.InteropServices.RuntimeInformation.dll" Condition="Exists('$(OutputPath)\System.Runtime.InteropServices.RuntimeInformation.dll')">
+        <PackagePath>build\$(TargetFramework)</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(OutputPath)\System.Xml.XPath.dll" Condition="Exists('$(OutputPath)\System.Xml.XPath.dll')">
+        <PackagePath>build\$(TargetFramework)</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(OutputPath)\System.Xml.XPath.XmlDocument.dll" Condition="Exists('$(OutputPath)\System.Xml.XPath.XmlDocument.dll')">
+        <PackagePath>build\$(TargetFramework)</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.15138.0'">
+      <TfmSpecificPackageFile Include="$(OutputPath)\*.dll">
+        <PackagePath>build\uap10.0.15138</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Remove="$(OutputPath)\System.Memory.dll" />
+      <TfmSpecificPackageFile Remove="$(OutputPath)\System.Buffers.dll" />
+      <TfmSpecificPackageFile Remove="$(OutputPath)\System.Runtime.CompilerServices.Unsafe.dll" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows10.0.17763.0'">
+      <TfmSpecificPackageFile Include="$(OutputPath)\*.dll">
+        <PackagePath>build\native</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Remove="$(OutputPath)\AdvancedSharpAdbClient.WinRT.dll" />
+      <TfmSpecificPackageFile Remove="$(OutputPath)\WinRT.Host.dll" />
+      <TfmSpecificPackageFile Remove="$(OutputPath)\WinRT.Host.Shim.dll" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\WinRT.Host.runtimeconfig.json" Condition="Exists('$(OutputPath)\WinRT.Host.runtimeconfig.json')">
+        <PackagePath>build\native</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(PkgMicrosoft_Windows_CsWinRT)\hosting\**\native\*">
+        <PackagePath>hosting</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(PkgMicrosoft_Windows_CsWinRT)\hosting\**\native\en-US\*">
+        <PackagePath>hosting</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(OutputPath)\AdvancedSharpAdbClient.WinRT.winmd" Condition="Exists('$(OutputPath)\AdvancedSharpAdbClient.WinRT.winmd')">
+        <PackagePath>lib\$(TargetFramework)\winmd</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(OutputPath)\WinRT.Host.Shim.dll" Condition="Exists('$(OutputPath)\WinRT.Host.Shim.dll')">
+        <PackagePath>lib\$(TargetFramework)</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(OutputPath)\WinRT.Runtime.dll" Condition="Exists('$(OutputPath)\WinRT.Runtime.dll')">
+        <PackagePath>lib\$(TargetFramework)</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
-    <None Include="..\logo.png" Pack="true" PackagePath="\Icon.png">
+    <None Include="..\logo.png" PackagePath="\Icon.png" Pack="true">
       <Link>Assets\Icon.png</Link>
     </None>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(FullTargets)' == 'true'">
-    <None Include="..\build\*" Pack="true" PackagePath="build\">
+    <None Include="..\README.md" PackagePath="\README.md" Pack="true">
+      <Link>Assets\README.md</Link>
+    </None>
+    <None Include="..\build\*" PackagePath="buildTransitive\" Pack="true" />
+    <None Include="..\build\*" PackagePath="build\" Pack="true">
       <Link>Assets\build\%(FileName)%(Extension)</Link>
     </None>
-    <None Include="$(OutputPathRoot)net6.0-windows10.0.17763.0\*.dll" Pack="true" PackagePath="build\native\">
-      <Link>Assets\build\native\%(FileName)%(Extension)</Link>
-    </None>
-    <None Remove="$(OutputPathRoot)net6.0-windows10.0.17763.0\AdvancedSharpAdbClient.WinRT.dll" />
-    <None Remove="$(OutputPathRoot)net6.0-windows10.0.17763.0\WinRT.Host.dll" />
-    <None Remove="$(OutputPathRoot)net6.0-windows10.0.17763.0\WinRT.Host.Shim.dll" />
-    <None Include="$(OutputPathRoot)net6.0-windows10.0.17763.0\WinRT.Host.runtimeconfig.json" Condition="Exists('$(OutputPathRoot)net6.0-windows10.0.17763.0\WinRT.Host.runtimeconfig.json')" Pack="true" PackagePath="build\native\">
-      <Link>Assets\build\native\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="$(OutputPathRoot)uap10.0.15138.0\*.dll" Pack="true" PackagePath="build\uap10.0.15138\">
-      <Link>Assets\build\uap10.0.15138\%(FileName)%(Extension)</Link>
-    </None>
-    <None Remove="$(OutputPathRoot)uap10.0.15138.0\System.Memory.dll" />
-    <None Remove="$(OutputPathRoot)uap10.0.15138.0\System.Buffers.dll" />
-    <None Remove="$(OutputPathRoot)uap10.0.15138.0\System.Runtime.CompilerServices.Unsafe.dll" />
-    <None Include="$(OutputPathRoot)uap10.0\AdvancedSharpAdbClient.dll" Condition="Exists('$(OutputPathRoot)uap10.0\AdvancedSharpAdbClient.dll')" Pack="true" PackagePath="build\uap10.0\">
-      <Link>Assets\build\uap10.0\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="$(OutputPathRoot)uap10.0\Microsoft.Extensions.Logging.Abstractions.dll" Condition="Exists('$(OutputPathRoot)uap10.0\Microsoft.Extensions.Logging.Abstractions.dll')" Pack="true" PackagePath="build\uap10.0\">
-      <Link>Assets\build\uap10.0\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="$(OutputPathRoot)uap10.0\System.Runtime.InteropServices.RuntimeInformation.dll" Condition="Exists('$(OutputPathRoot)uap10.0\System.Runtime.InteropServices.RuntimeInformation.dll')" Pack="true" PackagePath="build\uap10.0\">
-      <Link>Assets\build\uap10.0\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="$(OutputPathRoot)uap10.0\System.Xml.XPath.dll" Condition="Exists('$(OutputPathRoot)uap10.0\System.Xml.XPath.dll')" Pack="true" PackagePath="build\uap10.0\">
-      <Link>Assets\build\uap10.0\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="$(OutputPathRoot)uap10.0\System.Xml.XPath.XmlDocument.dll" Condition="Exists('$(OutputPathRoot)uap10.0\System.Xml.XPath.XmlDocument.dll')" Pack="true" PackagePath="build\uap10.0\">
-      <Link>Assets\build\uap10.0\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="..\build\*" Pack="true" PackagePath="buildTransitive\">
-      <Link>Assets\buildTransitive\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="$(NuGetPackageRoot)microsoft.windows.cswinrt\$(CsWinRTVersion)\hosting\**\native\*" Pack="true" PackagePath="hosting\">
-      <Link>Assets\hosting\%(RecursiveDir)\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="$(NuGetPackageRoot)microsoft.windows.cswinrt\$(CsWinRTVersion)\hosting\**\native\en-US\*" Pack="true" PackagePath="hosting\">
-      <Link>Assets\hosting\%(RecursiveDir)\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="$(OutputPathRoot)net6.0-windows10.0.17763.0\AdvancedSharpAdbClient.WinRT.winmd" Condition="Exists('$(OutputPathRoot)net6.0-windows10.0.17763.0\AdvancedSharpAdbClient.WinRT.winmd')" Pack="true" PackagePath="lib\net6.0-windows10.0.17763.0\winmd\">
-      <Link>Assets\lib\net6.0-windows10.0.17763.0\winmd\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="$(OutputPathRoot)net6.0-windows10.0.17763.0\WinRT.Host.Shim.dll" Condition="Exists('$(OutputPathRoot)net6.0-windows10.0.17763.0\WinRT.Host.Shim.dll')" Pack="true" PackagePath="lib\net6.0-windows10.0.17763.0\">
-      <Link>Assets\lib\net6.0-windows10.0.17763.0\winmd\%(FileName)%(Extension)</Link>
-    </None>
-    <None Include="$(OutputPathRoot)net6.0-windows10.0.17763.0\WinRT.Runtime.dll" Condition="Exists('$(OutputPathRoot)net6.0-windows10.0.17763.0\WinRT.Runtime.dll')" Pack="true" PackagePath="lib\net6.0-windows10.0.17763.0\">
-      <Link>Assets\lib\net6.0-windows10.0.17763.0\winmd\%(FileName)%(Extension)</Link>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows10.0.17763.0'">
-	<PackageReference Include="Microsoft.Windows.CsWinRT" Version="$(CsWinRTVersion)" />
   </ItemGroup>
 
 </Project>

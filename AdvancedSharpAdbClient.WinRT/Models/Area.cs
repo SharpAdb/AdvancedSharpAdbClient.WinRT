@@ -4,6 +4,7 @@
 
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
+using Rect = Windows.Foundation.Rect;
 
 namespace AdvancedSharpAdbClient.WinRT
 {

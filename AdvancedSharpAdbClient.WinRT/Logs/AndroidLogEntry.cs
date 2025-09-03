@@ -6,7 +6,7 @@ using System;
 
 namespace AdvancedSharpAdbClient.WinRT.Logs
 {
-    internal class AndroidLogEntry : ILogEntry
+    internal partial class AndroidLogEntry : ILogEntry
     {
         internal readonly AdvancedSharpAdbClient.Logs.AndroidLogEntry androidLogEntry;
 

@@ -2,8 +2,9 @@
 // Copyright (c) The Android Open Source Project, Ryan Conrad, Quamotion, yungd1plomat, wherewhere. All rights reserved.
 // </copyright>
 
-using Windows.Foundation;
 using Windows.Foundation.Metadata;
+using Point = Windows.Foundation.Point;
+using Size = Windows.Foundation.Size;
 
 namespace AdvancedSharpAdbClient.WinRT
 {
